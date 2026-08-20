@@ -14,8 +14,6 @@
 </head>
 <body>
 
-<!-- Línea de progreso ("marea") fija arriba de la ventana: avanza a
-     través de los 3 pasos completos del formulario -->
 <div class="tideline" id="tideline" role="progressbar" aria-label="Progreso general del formulario" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
   <div class="tideline__fill" id="tidelineFill"></div>
 </div>
@@ -23,7 +21,6 @@
 <main class="page">
   <div class="card" id="card">
 
-    <!-- ============ Encabezado persistente ============ -->
     <header class="header" id="mainHeader">
       <div class="brand">
         <img
@@ -41,10 +38,8 @@
       <p class="step-indicator" id="stepIndicator" aria-live="polite">Paso 1 de 3 · Tus datos</p>
     </header>
 
-    <!-- ============ Formulario ============ -->
     <form id="biepsForm" novalidate>
 
-      <!-- ---------- Paso 1: Datos generales ---------- -->
       <section class="step" data-step="0">
         <p class="step__text">
           Antes de comenzar, necesitamos algunos datos generales. Tus
@@ -104,7 +99,6 @@
         </div>
       </section>
 
-      <!-- ---------- Paso 2: Instrucciones ---------- -->
       <section class="step" data-step="1" hidden>
         <h2 class="step__title">Antes de comenzar</h2>
         <p class="step__text">
@@ -130,7 +124,6 @@
         </div>
       </section>
 
-      <!-- ---------- Paso 3: Cuestionario ---------- -->
       <section class="step" data-step="2" hidden>
         <p class="progress-label" id="progressLabel">0 de 13 frases respondidas</p>
 
@@ -149,7 +142,6 @@
 
     </form>
 
-    <!-- ============ Pantalla de agradecimiento ============ -->
     <section class="done" id="doneScreen" hidden>
       <div class="ripple" aria-hidden="true">
         <svg viewBox="0 0 120 120" width="72" height="72">
