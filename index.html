@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BIEPS-A · Escala de Bienestar Psicológico · UNACAR</title>
+<meta name="description" content="Aplicación electrónica de la Escala de Bienestar Psicológico para Adultos (BIEPS-A) — UNACAR, Dirección General de Servicios al Estudiante, Unidad de Servicios Psicopedagógicos." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Línea de progreso ("marea") fija arriba de la ventana: avanza a
+     través de los 3 pasos completos del formulario -->
+<div class="tideline" id="tideline" role="progressbar" aria-label="Progreso general del formulario" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <div class="tideline__fill" id="tidelineFill"></div>
+</div>
+
+<main class="page">
+  <div class="card" id="card">
+
+    <!-- ============ Encabezado persistente ============ -->
+    <header class="header" id="mainHeader">
+      <div class="brand">
+        <img
+          src="assets/logo-unacar.png"
+          alt="Escudo de la Universidad Autónoma del Carmen"
+          class="brand__logo"
+          onerror="this.onerror=null; this.replaceWith(Object.assign(document.createElement('div'), {className:'brand__logo brand__logo--fallback', textContent:'U'}));"
+        />
+        <p class="brand__breadcrumb">
+          UNACAR <span class="sep">›</span> Dirección General de Servicios al Estudiante
+          <span class="sep">›</span> Unidad de Servicios Psicopedagógicos
+        </p>
+      </div>
+      <h1 class="title">Escala de Bienestar Psicológico<br class="title__break">para Adultos <span class="title__code">(BIEPS-A)</span></h1>
+      <p class="step-indicator" id="stepIndicator" aria-live="polite">Paso 1 de 3 · Tus datos</p>
+    </header>
+
+    <!-- ============ Formulario ============ -->
+    <form id="biepsForm" novalidate>
+
+      <!-- ---------- Paso 1: Datos generales ---------- -->
+      <section class="step" data-step="0">
+        <p class="step__text">
+          Antes de comenzar, necesitamos algunos datos generales. Tus
+          respuestas se registran de forma confidencial y solo se usan con
+          fines de acompañamiento psicopedagógico.
+        </p>
+
+        <fieldset class="datos">
+          <legend>Tus datos</legend>
+
+          <div class="field field--full">
+            <label for="matricula">Matrícula</label>
+            <input type="text" id="matricula" name="matricula" autocomplete="off" required />
+          </div>
+
+          <div class="field field--full">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="off" required />
+          </div>
+
+          <div class="field field--full">
+            <label for="facultad">Facultad</label>
+            <select id="facultad" name="facultad" required>
+              <option value="" disabled selected>Selecciona tu facultad</option>
+            </select>
+          </div>
+
+          <div class="field field--full">
+            <label for="programa">Programa educativo</label>
+            <select id="programa" name="programa" required disabled>
+              <option value="" disabled selected>Elige primero tu facultad</option>
+            </select>
+          </div>
+
+          <div class="field field--small">
+            <label for="edad">Edad</label>
+            <input type="number" id="edad" name="edad" min="15" max="90" inputmode="numeric" required />
+          </div>
+
+          <div class="field field--small">
+            <span class="field__label-text">Sexo</span>
+            <div class="pillgroup" role="radiogroup" aria-label="Sexo">
+              <label class="pill">
+                <input type="radio" name="sexo" value="Femenino" required />
+                <span>Femenino</span>
+              </label>
+              <label class="pill">
+                <input type="radio" name="sexo" value="Masculino" required />
+                <span>Masculino</span>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="step-nav step-nav--end">
+          <button type="button" id="toStep2" class="btn" disabled>Continuar</button>
+        </div>
+      </section>
+
+      <!-- ---------- Paso 2: Instrucciones ---------- -->
+      <section class="step" data-step="1" hidden>
+        <h2 class="step__title">Antes de comenzar</h2>
+        <p class="step__text">
+          A continuación encontrarás 13 frases sobre cómo te has sentido
+          durante el último mes. Léelas con atención y marca, en cada una,
+          la opción que mejor describa lo que pensaste y sentiste. No hay
+          respuestas buenas ni malas — todas sirven. Por favor no dejes
+          ninguna frase sin responder.
+        </p>
+
+        <div class="legend">
+          <p class="legend__label">Para cada frase vas a elegir una de estas tres opciones:</p>
+          <div class="legend__options">
+            <span class="legend__pill">En desacuerdo</span>
+            <span class="legend__pill">Ni de acuerdo ni en desacuerdo</span>
+            <span class="legend__pill">De acuerdo</span>
+          </div>
+        </div>
+
+        <div class="step-nav step-nav--split">
+          <button type="button" id="backToStep1" class="btn btn--ghost">Atrás</button>
+          <button type="button" id="toStep3" class="btn">Comenzar la prueba</button>
+        </div>
+      </section>
+
+      <!-- ---------- Paso 3: Cuestionario ---------- -->
+      <section class="step" data-step="2" hidden>
+        <p class="progress-label" id="progressLabel">0 de 13 frases respondidas</p>
+
+        <div class="items" id="itemsContainer" aria-label="Frases de la escala"></div>
+
+        <div class="submit-row">
+          <button type="button" id="backToStep2" class="btn btn--ghost">Atrás</button>
+          <div class="submit-row__right">
+            <p class="submit-hint" id="submitHint">Responde todas las frases para poder enviar.</p>
+            <button type="submit" id="submitBtn" class="btn" disabled>Enviar respuestas</button>
+          </div>
+        </div>
+
+        <p class="error-message" id="errorMessage" role="alert" hidden></p>
+      </section>
+
+    </form>
+
+    <!-- ============ Pantalla de agradecimiento ============ -->
+    <section class="done" id="doneScreen" hidden>
+      <div class="ripple" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="72" height="72">
+          <circle cx="60" cy="60" r="16" class="ripple__core" />
+          <circle cx="60" cy="60" r="34" class="ripple__ring ripple__ring--1" />
+          <circle cx="60" cy="60" r="52" class="ripple__ring ripple__ring--2" />
+        </svg>
+      </div>
+      <h2>Gracias, tus respuestas quedaron registradas</h2>
+      <p>Puedes cerrar esta ventana. Si necesitas apoyo psicopedagógico, la unidad
+      seguirá disponible para acompañarte.</p>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <p>BIEPS-A — María Martina Casullo, Facultad de Psicología, UBA (2002).
+    Aplicación electrónica desarrollada para uso interno de UNACAR.</p>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
