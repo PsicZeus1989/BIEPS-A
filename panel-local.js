@@ -1,10 +1,3 @@
-// ============================================================
-// BIEPS-A · Panel local de resultados
-// Lee un CSV ya exportado desde Supabase. No se conecta a
-// internet ni a ninguna base de datos.
-// ============================================================
-
-// Los 13 ítems, para mostrar el detalle de cada respuesta.
 const ITEMS = [
   { id: 1,  text: "Creo que sé lo que quiero hacer con mi vida." },
   { id: 2,  text: "Si algo me sale mal puedo aceptarlo, admitirlo." },
@@ -23,7 +16,6 @@ const ITEMS = [
 
 const OPTION_LABELS = { 1: "En desacuerdo", 2: "Ni de acuerdo ni en desacuerdo", 3: "De acuerdo" };
 
-// Mismo catálogo que index.html, para poblar el filtro de facultad/programa.
 const FACULTADES = {
   "Facultad de Derecho": [
     "Licenciatura en Derecho",
@@ -85,11 +77,6 @@ const COLUMNAS_NUMERICAS = [
   "item_08", "item_09", "item_10", "item_11", "item_12", "item_13",
 ];
 
-// ------------------------------------------------------------
-// Parser de CSV (sin librerías externas, para que el panel
-// funcione sin internet). Soporta campos entre comillas con
-// comas, comillas dobles y saltos de línea dentro del campo.
-// ------------------------------------------------------------
 function parseCSV(texto) {
   const filas = [];
   let fila = [];
@@ -169,19 +156,12 @@ function validarColumnas(filas) {
   return null;
 }
 
-// ------------------------------------------------------------
-// Utilidad: nunca insertar texto de estudiantes en el HTML sin
-// escaparlo (nombre y matrícula son texto libre).
-// ------------------------------------------------------------
 function escapeHtml(valor) {
   return String(valor ?? "").replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[ch]));
 }
 
-// ------------------------------------------------------------
-// Referencias del DOM
-// ------------------------------------------------------------
 const loaderCard = document.getElementById("loaderCard");
 const dashboard = document.getElementById("dashboard");
 const dropzone = document.getElementById("dropzone");
@@ -199,9 +179,6 @@ const filterHasta = document.getElementById("filterHasta");
 let allRows = [];
 let filasFiltradas = [];
 
-// ------------------------------------------------------------
-// Carga del archivo (clic o arrastrar y soltar)
-// ------------------------------------------------------------
 ["dragenter", "dragover"].forEach((evt) => {
   dropzone.addEventListener(evt, (e) => {
     e.preventDefault();
@@ -271,9 +248,6 @@ reloadBtn.addEventListener("click", () => {
   loadError.hidden = true;
 });
 
-// ------------------------------------------------------------
-// Filtro Facultad → Programa (poblado una sola vez)
-// ------------------------------------------------------------
 for (const nombreFacultad of Object.keys(FACULTADES)) {
   const opt = document.createElement("option");
   opt.value = nombreFacultad;
@@ -309,9 +283,6 @@ document.getElementById("clearFiltersBtn").addEventListener("click", () => {
   aplicarFiltros();
 });
 
-// ------------------------------------------------------------
-// Filtrado
-// ------------------------------------------------------------
 function aplicarFiltros() {
   const q = filterSearch.value.trim().toLowerCase();
   const facultad = filterFacultad.value;
@@ -335,9 +306,6 @@ function aplicarFiltros() {
   renderTabla(filasFiltradas);
 }
 
-// ------------------------------------------------------------
-// Estadísticas resumidas
-// ------------------------------------------------------------
 function promedio(valores) {
   const nums = valores.filter((v) => typeof v === "number");
   if (!nums.length) return 0;
@@ -363,9 +331,6 @@ function renderStats(filas) {
   `).join("");
 }
 
-// ------------------------------------------------------------
-// Tabla de resultados
-// ------------------------------------------------------------
 function formatFecha(fila) {
   if (fila._fechaObj) {
     return fila._fechaObj.toLocaleDateString("es-MX", { year: "numeric", month: "short", day: "numeric" });
@@ -413,9 +378,6 @@ function renderTabla(filas) {
   });
 }
 
-// ------------------------------------------------------------
-// Modal de detalle (respuesta ítem por ítem)
-// ------------------------------------------------------------
 const modalBackdrop = document.getElementById("modalBackdrop");
 document.getElementById("modalClose").addEventListener("click", cerrarDetalle);
 modalBackdrop.addEventListener("click", (e) => {
@@ -456,9 +418,6 @@ function abrirDetalle(fila) {
   modalBackdrop.hidden = false;
 }
 
-// ------------------------------------------------------------
-// Exportar a CSV (respeta los filtros activos)
-// ------------------------------------------------------------
 document.getElementById("exportBtn").addEventListener("click", () => {
   if (filasFiltradas.length === 0) return;
 
@@ -478,7 +437,6 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   const filasCsv = filasFiltradas.map((f) => columnas.map((c) => escaparCsv(f[c])).join(","));
   const csv = [encabezado, ...filasCsv].join("\n");
 
-  // El BOM (\uFEFF) al inicio evita que Excel muestre mal los acentos.
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
