@@ -37,10 +37,6 @@ const DIMENSIONS = {
   proyectos:          [1, 3, 6, 10],
 };
 
-// Facultades y programas educativos de licenciatura, campus presencial
-// (tomado de unacar.mx/ofertaeducativa/licenciatura.php). Si tu unidad
-// también aplica la prueba a programas de UNACAR Virtual (a distancia),
-// avísame y agrego ese bloque aparte.
 const FACULTADES = {
   "Facultad de Derecho": [
     "Licenciatura en Derecho",
@@ -89,7 +85,6 @@ const FACULTADES = {
   ],
 };
 
-// ---- Referencias del DOM --------------------------------------
 const form = document.getElementById("biepsForm");
 const stepEls = Array.from(document.querySelectorAll(".step"));
 const stepIndicator = document.getElementById("stepIndicator");
@@ -112,9 +107,6 @@ const errorMessage = document.getElementById("errorMessage");
 const STEP_LABELS = ["Tus datos", "Instrucciones", "Cuestionario"];
 let currentStep = 0;
 
-// ------------------------------------------------------------
-// Facultad → Programa (selector en cascada)
-// ------------------------------------------------------------
 for (const nombreFacultad of Object.keys(FACULTADES)) {
   const opt = document.createElement("option");
   opt.value = nombreFacultad;
@@ -148,9 +140,6 @@ facultadSelect.addEventListener("change", () => {
   }
 });
 
-// ------------------------------------------------------------
-// Render de los 13 ítems (paso 3)
-// ------------------------------------------------------------
 for (const item of ITEMS) {
   const wrapper = document.createElement("div");
   wrapper.className = "item";
@@ -176,9 +165,6 @@ for (const item of ITEMS) {
   itemsContainer.appendChild(wrapper);
 }
 
-// ------------------------------------------------------------
-// Navegación entre pasos
-// ------------------------------------------------------------
 function renderStepIndicator() {
   stepIndicator.textContent = `Paso ${currentStep + 1} de ${stepEls.length} · ${STEP_LABELS[currentStep]}`;
 }
@@ -205,9 +191,6 @@ form.addEventListener("keydown", (e) => {
   }
 });
 
-// ------------------------------------------------------------
-// Progreso
-// ------------------------------------------------------------
 function datosCompletos() {
   const matricula = form.matricula.value.trim();
   const nombre = form.nombre.value.trim();
@@ -252,9 +235,6 @@ function countAnsweredItems() {
   return answered;
 }
 
-// La "marea" refleja el avance de TODO el formulario (3 pasos), no solo
-// el cuestionario: pasos 1 y 3 aportan su fracción según lo llenado;
-// el paso 2 (instrucciones) avanza de golpe al pasar al cuestionario.
 function updateTideline() {
   let within = 0;
   if (currentStep === 0) within = datosFraction();
@@ -284,9 +264,6 @@ form.addEventListener("change", updateAll);
 renderStepIndicator();
 updateAll();
 
-// ------------------------------------------------------------
-// Cálculo de puntajes
-// ------------------------------------------------------------
 function calcularPuntajes(respuestas) {
   const puntajesDimension = {};
   for (const [dimension, itemIds] of Object.entries(DIMENSIONS)) {
@@ -296,9 +273,6 @@ function calcularPuntajes(respuestas) {
   return { ...puntajesDimension, puntaje_total };
 }
 
-// ------------------------------------------------------------
-// Envío a Supabase
-// ------------------------------------------------------------
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 form.addEventListener("submit", async (e) => {
